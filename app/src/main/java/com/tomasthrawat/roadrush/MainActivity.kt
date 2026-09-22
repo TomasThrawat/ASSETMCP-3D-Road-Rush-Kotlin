@@ -1,18 +1,18 @@
 package com.tomasthrawat.roadrush
 
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.os.Bundle
-import android.view.View
 import android.webkit.WebChromeClient
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import androidx.activity.ComponentActivity
+import androidx.activity.OnBackPressedCallback
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 
-class MainActivity : Activity() {
+class MainActivity : ComponentActivity() {
     private lateinit var webView: WebView
 
     @SuppressLint("SetJavaScriptEnabled")
@@ -38,6 +38,17 @@ class MainActivity : Activity() {
 
         setContentView(webView)
         applyImmersiveMode()
+
+        onBackPressedDispatcher.addCallback(
+            this,
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    if (webView.canGoBack()) webView.goBack()
+                    else finish()
+                }
+            }
+        )
+
         webView.loadUrl("file:///android_asset/web/index.html")
     }
 
@@ -53,15 +64,6 @@ class MainActivity : Activity() {
         super.onWindowFocusChanged(hasFocus)
         if (hasFocus && ::webView.isInitialized) {
             applyImmersiveMode()
-        }
-    }
-
-    @Deprecated("Deprecated by Android framework; use normal activity navigation.")
-    override fun onBackPressed() {
-        if (::webView.isInitialized && webView.canGoBack()) {
-            webView.goBack()
-        } else {
-            super.onBackPressed()
         }
     }
 }
