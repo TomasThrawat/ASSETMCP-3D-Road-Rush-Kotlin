@@ -1,13 +1,12 @@
 # ASSETMCP 3D Road Rush Kotlin
 
-Native Kotlin Android APK containing the completed 3D Road Rush game.
+Kotlin Android app packaging the completed ASSETMCP 3D Road Rush game.
 
-Features:
-- Real CC0 3D car, road, obstacles and street lamp assets.
-- Three.js WebGL rendering.
-- Lane switching, collisions, score, distance, speed and nitro.
-- Landscape immersive mode.
-- GitHub Actions debug APK build.
-- No gameplay logs, analytics, localStorage or diagnostic files.
+- Three.js WebGL gameplay inside Android WebView.
+- Real CC0 3D car, road, barrier/cone and street-lamp assets.
+- Lane switching, collision, score, distance, speed and nitro.
+- Landscape immersive Android UI.
+- GitHub Actions builds and uploads the debug APK.
+- No localStorage, telemetry, analytics, or app-created gameplay log files.
 
-Internet permission is required because the Three.js modules and GLB assets are loaded from their public CDN URLs.
+The game needs Internet access to load Three.js and the CC0 GLB assets from the public CDN.
