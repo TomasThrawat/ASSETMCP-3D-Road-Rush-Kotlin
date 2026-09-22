@@ -7,12 +7,12 @@ plugins {
 
 android {
     namespace = "com.tomasthrawat.roadrush"
-    compileSdk = 35
+    compileSdk = 37
 
     defaultConfig {
         applicationId = "com.tomasthrawat.roadrush"
         minSdk = 23
-        targetSdk = 35
+        targetSdk = 37
         versionCode = 1
         versionName = "1.0.0"
     }
@@ -26,6 +26,10 @@ android {
         abortOnError = true
         warningsAsErrors = true
     }
+}
+
+dependencies {
+    implementation("androidx.core:core-ktx:1.19.0")
 }
 
 kotlin {
