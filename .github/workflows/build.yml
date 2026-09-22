@@ -25,21 +25,23 @@ jobs:
           java-version: "17"
           cache: gradle
 
-      - name: Verify preinstalled Android 17 SDK
+      - name: Show Android SDK environment
         shell: bash
         run: |
           set -eu
-          SDK_ROOT="${ANDROID_SDK_ROOT:-${ANDROID_HOME}}"
+          SDK_ROOT="${ANDROID_SDK_ROOT:-${ANDROID_HOME:-}}"
           test -n "$SDK_ROOT"
-          test -x "$SDK_ROOT/platform-tools/adb"
-          test -f "$SDK_ROOT/platforms/android-37/android.jar"
-          echo "Using Android SDK platform: $SDK_ROOT/platforms/android-37"
-          ls -ld "$SDK_ROOT/platforms/android-37"
+          echo "ANDROID SDK: $SDK_ROOT"
+          find "$SDK_ROOT/platforms" -maxdepth 1 -type d -name 'android-37*' -print | sort -V
+          find "$SDK_ROOT/build-tools" -maxdepth 1 -type d -name '37.*' -o -name '36.*' | sort -V
 
       - name: Set up Gradle 9.6.0
         uses: gradle/actions/setup-gradle@v6
         with:
           gradle-version: "9.6.0"
+
+      - name: Verify Gradle
+        run: gradle --version
 
       - name: Lint
         run: gradle :app:lintDebug --stacktrace --warning-mode=all
