@@ -10,7 +10,7 @@ permissions:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - name: Configure Git defaults
         run: git config --global init.defaultBranch main
@@ -33,7 +33,7 @@ jobs:
           test -n "$SDK_ROOT"
           echo "ANDROID SDK: $SDK_ROOT"
           find "$SDK_ROOT/platforms" -maxdepth 1 -type d -name 'android-37*' -print | sort -V
-          find "$SDK_ROOT/build-tools" -maxdepth 1 -type d -name '37.*' -o -name '36.*' | sort -V
+          find "$SDK_ROOT/build-tools" -maxdepth 1 -type d \( -name '37.*' -o -name '36.*' \) -print | sort -V
 
       - name: Set up Gradle 9.6.0
         uses: gradle/actions/setup-gradle@v6
