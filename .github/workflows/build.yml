@@ -12,6 +12,9 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+      - name: Configure Git defaults
+        run: git config --global init.defaultBranch main
+
       - name: Checkout
         uses: actions/checkout@v7
 
@@ -22,16 +25,16 @@ jobs:
           java-version: "17"
           cache: gradle
 
-      - name: Install Android 17 SDK platform
+      - name: Verify preinstalled Android 17 SDK
         shell: bash
         run: |
           set -eu
           SDK_ROOT="${ANDROID_SDK_ROOT:-${ANDROID_HOME}}"
           test -n "$SDK_ROOT"
-          SDKMANAGER="$(find "$SDK_ROOT/cmdline-tools" -type f -name sdkmanager | sort -V | tail -n 1)"
-          test -x "$SDKMANAGER"
-          yes | "$SDKMANAGER" --sdk_root="$SDK_ROOT" --licenses >/dev/null 2>&1 || true
-          "$SDKMANAGER" --sdk_root="$SDK_ROOT" "platforms;android-37"
+          test -x "$SDK_ROOT/platform-tools/adb"
+          test -f "$SDK_ROOT/platforms/android-37/android.jar"
+          echo "Using Android SDK platform: $SDK_ROOT/platforms/android-37"
+          ls -ld "$SDK_ROOT/platforms/android-37"
 
       - name: Set up Gradle 9.6.0
         uses: gradle/actions/setup-gradle@v6
