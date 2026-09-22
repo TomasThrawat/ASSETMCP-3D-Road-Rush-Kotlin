@@ -25,12 +25,13 @@ jobs:
       - name: Install Android 17 SDK platform
         shell: bash
         run: |
-          set -euo pipefail
+          set -eu
           SDK_ROOT="${ANDROID_SDK_ROOT:-${ANDROID_HOME}}"
+          test -n "$SDK_ROOT"
           SDKMANAGER="$(find "$SDK_ROOT/cmdline-tools" -type f -name sdkmanager | sort -V | tail -n 1)"
           test -x "$SDKMANAGER"
-          yes | "$SDKMANAGER" --licenses >/dev/null
-          "$SDKMANAGER" "platforms;android-37"
+          yes | "$SDKMANAGER" --sdk_root="$SDK_ROOT" --licenses >/dev/null 2>&1 || true
+          "$SDKMANAGER" --sdk_root="$SDK_ROOT" "platforms;android-37"
 
       - name: Set up Gradle 9.6.0
         uses: gradle/actions/setup-gradle@v6
@@ -44,9 +45,11 @@ jobs:
         run: gradle :app:assembleDebug --stacktrace --warning-mode=all
 
       - name: Verify APK
+        shell: bash
         run: |
-          set -euo pipefail
+          set -eu
           test -s app/build/outputs/apk/debug/app-debug.apk
+          file app/build/outputs/apk/debug/app-debug.apk
           ls -lh app/build/outputs/apk/debug/app-debug.apk
 
       - name: Upload APK
@@ -54,3 +57,4 @@ jobs:
         with:
           name: ASSETMCP-3D-Road-Rush-debug
           path: app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error
